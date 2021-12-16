@@ -7,7 +7,7 @@ on:
         required: true
         type: string
       GH_PAGES_DOMAIN:
-        required: true
+        required: false
         type: string
     secrets:
       AWS_ACCESS_KEY_ID:
