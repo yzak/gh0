@@ -1,4 +1,4 @@
-name: shared-deploy
+name: deploy
 
 on:
   workflow_call:

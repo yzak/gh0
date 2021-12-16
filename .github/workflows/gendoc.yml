@@ -1,4 +1,4 @@
-name: shared-gendoc
+name: gendoc
 
 on:
   workflow_call:

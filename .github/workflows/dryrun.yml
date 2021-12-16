@@ -1,4 +1,4 @@
-name: shared-dryrun
+name: dryrun
 
 on:
   workflow_call:

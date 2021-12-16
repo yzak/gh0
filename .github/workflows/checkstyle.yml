@@ -1,4 +1,4 @@
-name: shared-checkstyle
+name: checkstyle
 
 on:
   workflow_call:
