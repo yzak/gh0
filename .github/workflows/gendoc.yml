@@ -8,6 +8,7 @@ on:
         type: string
       GH_PAGES_DOMAIN:
         required: false
+        default: ''
         type: string
     secrets:
       AWS_ACCESS_KEY_ID:
