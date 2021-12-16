@@ -1,0 +1,66 @@
+name: shared-gendoc
+
+on:
+  workflow_call:
+    inputs:
+      AWS_REGION:
+        required: true
+        type: string
+      GH_PAGES_DOMAIN:
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_ASSUME_ROLE_ARN:
+        required: true
+      SLACK_WEBHOOK_URL:
+        required: true
+
+jobs:
+  github-pages:
+    name: Generate Terraform Docs
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials , Assume role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ inputs.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ASSUME_ROLE_ARN }}
+          role-duration-seconds: 3600
+          role-skip-session-tagging: true
+
+      - name: Rover
+        uses: Official-James/rover-terraform-action@main
+
+      - name: Decompress artifact
+        uses: TonyBogdanov/zip@1.0
+        with:
+            args: unzip -qq -o ./rover.zip -d ./docs/
+      
+      - name: Deploy pages
+        uses: peaceiris/actions-gh-pages@v3.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          cname: ${{ inputs.GH_PAGES_DOMAIN }}
+
+      - name: Notify failure
+        uses: 8398a7/action-slack@v3.12.0
+        with:
+          status: ${{ job.status }}
+          author_name: ${{ github.workflow }}
+          fields: repo,message,commit,author,action,job,took,eventName,ref,workflow
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: failure()
