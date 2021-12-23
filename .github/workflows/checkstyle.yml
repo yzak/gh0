@@ -20,8 +20,8 @@ on:
         required: true
 
 env:
-  TF_LOG=DEBUG
-  TF_LOG_PATH=./terraform.log
+  TF_LOG: DEBUG
+  TF_LOG_PATH: ./terraform.log
 
 jobs:
   terraform:
