@@ -74,13 +74,6 @@ jobs:
           cat ${{ env.TF_LOG_PATH }}
         if: always()
 
-      - name: Upload to slack step
-        uses: adrey/slack-file-upload-action@master
-        with:
-          token: ${{ secrets.SLACK_TOKEN }}
-          path: test.txt
-          channel: random
-
       - name: Notify failure
         uses: 8398a7/action-slack@v3.12.0
         with:
