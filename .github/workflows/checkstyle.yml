@@ -19,10 +19,15 @@ on:
       SLACK_WEBHOOK_URL:
         required: true
 
+env:
+  TF_LOG=DEBUG
+  TF_LOG_PATH=./terraform.log
+
 jobs:
   terraform:
     name: Terraform format, validate, plan
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout repository
@@ -63,6 +68,18 @@ jobs:
         working-directory: ./
         run: |
           terraform plan -no-color
+
+      - name: Show Terraform log
+        run: |
+          cat ${{ env.TF_LOG_PATH }}
+        if: always()
+
+      - name: Upload to slack step
+        uses: adrey/slack-file-upload-action@master
+        with:
+          token: ${{ secrets.SLACK_TOKEN }}
+          path: test.txt
+          channel: random
 
       - name: Notify failure
         uses: 8398a7/action-slack@v3.12.0
