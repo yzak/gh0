@@ -11,9 +11,11 @@ on:
         type: string
       ARTIFACT_NAME:
         required: false
+        default: ""
         type: string
       ARTIFACT_PATH:
         required: false
+        default: ""
         type: string
     secrets:
       AWS_ACCESS_KEY_ID:
@@ -93,7 +95,7 @@ jobs:
 
       - name: save artifacts
         uses: actions/upload-artifact@v2
-        if: ${{ inputs.ARTIFACT_PATH != "" }}
+        if: ${{ inputs.ARTIFACT_PATH != '' }}
         with:
           name: ${{ inputs.ARTIFACT_NAME }}
           path: ${{ inputs.ARTIFACT_PATH }}
