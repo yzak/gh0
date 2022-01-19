@@ -9,6 +9,14 @@ on:
       CI_ENV:
         required: true
         type: string
+      ARTIFACT_NAME:
+        required: false
+        default: ""
+        type: string
+      ARTIFACT_PATH:
+        required: false
+        default: ""
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -84,4 +92,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: failure()
-        
+
+      - name: save artifacts
+        uses: actions/upload-artifact@v2
+        if: ${{ inputs.ARTIFACT_PATH }} != ""
+        with:
+          name: ${{ inputs.ARTIFACT_NAME }}
+          path: ${{ inputs.ARTIFACT_PATH }}
