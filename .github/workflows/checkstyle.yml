@@ -11,11 +11,9 @@ on:
         type: string
       ARTIFACT_NAME:
         required: false
-        default: ""
         type: string
       ARTIFACT_PATH:
         required: false
-        default: ""
         type: string
     secrets:
       AWS_ACCESS_KEY_ID:
